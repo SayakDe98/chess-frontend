@@ -1,16 +1,135 @@
-# React + Vite
+# Chess Frontend (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React frontend for the multiplayer chess server.
 
-Currently, two official plugins are available:
+Uses:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* React
+* chess.js
+* WebSockets
 
-## React Compiler
+The UI renders the board and sends moves to the backend server.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+# Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* Real-time board updates
+* WebSocket communication
+* chess.js move handling
+* Unicode chess pieces
+* Click-to-move interface
+
+---
+
+# Project Structure
+
+```
+chess-frontend/
+
+├── package.json
+├── index.html
+│
+└── src/
+    ├── main.jsx
+    ├── App.jsx
+    │
+    ├── chess/
+    │   chessInstance.js
+    │
+    ├── api/
+    │   websocket.js
+    │
+    ├── components/
+    │   ChessBoard.jsx
+    │   Square.jsx
+    │
+    ├── hooks/
+    │   useGame.js
+    │
+    ├── utils/
+    │   pieceIcons.js
+    │
+    └── styles/
+        board.css
+```
+
+---
+
+# Requirements
+
+* Node.js 18+
+* npm
+
+---
+
+# Install dependencies
+
+```
+npm install
+```
+
+---
+
+# Run development server
+
+```
+npm run dev
+```
+
+Open:
+
+```
+http://localhost:5173
+```
+
+---
+
+# WebSocket Connection
+
+The frontend connects to:
+
+```
+ws://localhost:8080/ws
+```
+
+Ensure the Go backend is running.
+
+---
+
+# chess.js
+
+This project uses **chess.js** for:
+
+* board representation
+* FEN parsing
+* legal move validation
+* check and checkmate detection
+
+---
+
+# Example Move Flow
+
+1. User clicks a piece
+2. User selects destination square
+3. Move is sent to server
+4. Server validates move
+5. Server sends updated FEN
+6. Frontend updates board
+
+---
+
+# Future Improvements
+
+* drag-and-drop pieces
+* legal move highlighting
+* promotion UI
+* move history
+* timers
+* responsive mobile UI
+
+---
+
+# License
+
+MIT
