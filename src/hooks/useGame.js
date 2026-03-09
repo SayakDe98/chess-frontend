@@ -14,24 +14,42 @@ export default function useGame() {
     });
 
     setSocket(ws);
+    return () => ws.close()
   }, []);
+  function coordToSquare(x, y) {
+  const file = String.fromCharCode(97 + x); // a-h
+  const rank = 8 - y;                       // board is reversed
+  return file + rank;
+}
+function selectSquare(x, y) {
+  if (!selected) {
+    setSelected({ x, y });
+    return;
+  }
 
-  function selectSquare(x, y) {
-    if (!selected) {
-      setSelected({ x, y });
-      return;
+  const from = coordToSquare(selected.x, selected.y);
+  const to = coordToSquare(x, y);
+
+  try {
+    const move = chess.move({
+      from,
+      to,
+      promotion: "q"
+    });
+
+    // only update if move is valid
+    if (move) {
+      setBoard(chess.board());
+      socket?.send(JSON.stringify({ from, to }));
     }
 
-    const move = {
-      fromX: selected.x,
-      fromY: selected.y,
-      toX: x,
-      toY: y
-    };
-
-    socket.send(JSON.stringify(move));
-    setSelected(null);
+  } catch (err) {
+    alert("Invalid move");
   }
+
+  // always clear selection so next click works
+  setSelected(null);
+}
 
   return { board, selectSquare };
 }
