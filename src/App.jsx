@@ -1,9 +1,8 @@
 import ChessBoard from "./components/ChessBoard";
-
+import "./App.css";
 function App() {
   return (
-    <div>
-      <h1>Multiplayer Chess</h1>
+    <div className="app">
       <ChessBoard />
     </div>
   );

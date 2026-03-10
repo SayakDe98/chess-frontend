@@ -22,3 +22,22 @@
 .dark {
   background: #b58863;
 }
+
+@media screen and (max-width: 768px) {
+  .board {
+  display: grid;
+  grid-template-columns: repeat(8, 12.5svw);
+  width: 100svw;
+  margin: auto;
+}
+
+.square {
+  width: 12.5svw;
+  height: 12.5svw;
+  font-size: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+}
