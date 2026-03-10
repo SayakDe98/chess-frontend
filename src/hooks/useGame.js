@@ -7,11 +7,14 @@ export default function useGame() {
   const [board, setBoard] = useState(chess.board());
   const [socket, setSocket] = useState(null);
   const [selected, setSelected] = useState(null);
+  const [turn, setTurn] = useState(chess.turn());
+
 
   useEffect(() => {
     const ws = createSocket((data) => {
       chess.load(data.fen);
       setBoard(chess.board());
+      setTurn(chess.turn());
     });
 
     setSocket(ws);
@@ -22,6 +25,19 @@ export default function useGame() {
   const rank = 8 - y;                       // board is reversed
   return file + rank;
 }
+function undoMove() {
+
+    const move = chess.undo();
+
+    if (!move) return; // nothing to undo
+
+    setBoard(chess.board());
+    setTurn(chess.turn());
+
+    socket?.send(JSON.stringify({
+      type: "undo"
+    }));
+  }
 function resetGame() {
   chess.reset();              // resets chess.js internal state
   setBoard(chess.board());    // update React board
@@ -46,6 +62,7 @@ function selectSquare(x, y) {
     // only update if move is valid
     if (move) {
       setBoard(chess.board());
+      setTurn(chess.turn());
       socket?.send(JSON.stringify({ from, to }));
 
       // check game status
@@ -75,5 +92,5 @@ function selectSquare(x, y) {
   setSelected(null);
 }
 
-  return { board, selectSquare };
+  return { board, selectSquare, undoMove, turn };
 }
