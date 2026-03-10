@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { chess } from "../chess/chessInstance";
 import { createSocket } from "../api/websocket";
+import { toast } from "react-toastify";
 
 export default function useGame() {
   const [board, setBoard] = useState(chess.board());
@@ -20,6 +21,11 @@ export default function useGame() {
   const file = String.fromCharCode(97 + x); // a-h
   const rank = 8 - y;                       // board is reversed
   return file + rank;
+}
+function resetGame() {
+  chess.reset();              // resets chess.js internal state
+  setBoard(chess.board());    // update React board
+  setSelected(null);
 }
 function selectSquare(x, y) {
   if (!selected) {
@@ -41,10 +47,28 @@ function selectSquare(x, y) {
     if (move) {
       setBoard(chess.board());
       socket?.send(JSON.stringify({ from, to }));
+
+      // check game status
+      if(chess.isCheck()) {
+        toast.info("Check!");
+      }
+      if (chess.isGameOver()) {
+
+        if (chess.isCheckmate()) {
+          toast.error("Checkmate!");
+        } 
+        else if (chess.isStalemate()) {
+          toast.warn("Stalemate!");
+        } 
+        else {
+          toast.info("Draw!");
+        }
+        resetGame();
+      }
     }
 
   } catch (err) {
-    alert("Invalid move");
+    toast.error("Invalid move");
   }
 
   // always clear selection so next click works
