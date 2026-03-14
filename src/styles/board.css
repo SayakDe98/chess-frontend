@@ -3,6 +3,7 @@
   grid-template-columns: repeat(8, 80px);
   width: 640px;
   margin: auto;
+  margin-top: 8px;
 }
 
 .square {
@@ -35,6 +36,7 @@
   grid-template-columns: repeat(8, 12.5svw);
   width: 100svw;
   margin: auto;
+  margin-top: 8px;
 }
 
 .square {
