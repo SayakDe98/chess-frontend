@@ -44,11 +44,32 @@ function resetGame() {
   setSelected(null);
 }
 function selectSquare(x, y) {
+  const piece = board[y][x];
+
+  // FIRST CLICK → selecting a piece
   if (!selected) {
+
+    if (!piece) {
+      toast.error("Select a piece first");
+      return;
+    }
+
+    const currentTurn = chess.turn(); // 'w' or 'b'
+
+    if (piece.color !== currentTurn) {
+      toast.error(
+        currentTurn === "w"
+          ? "It's White's turn"
+          : "It's Black's turn"
+      );
+      return;
+    }
+
     setSelected({ x, y });
     return;
   }
 
+  // SECOND CLICK → attempt move
   const from = coordToSquare(selected.x, selected.y);
   const to = coordToSquare(x, y);
 
@@ -59,7 +80,6 @@ function selectSquare(x, y) {
       promotion: "q"
     });
 
-    // only update if move is valid
     if (move) {
       setBoard(chess.board());
       setTurn(chess.turn());
@@ -73,10 +93,10 @@ function selectSquare(x, y) {
 
         if (chess.isCheckmate()) {
           toast.error("Checkmate!");
-        } 
+        }
         else if (chess.isStalemate()) {
           toast.warn("Stalemate!");
-        } 
+        }
         else {
           toast.info("Draw!");
         }
