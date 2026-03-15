@@ -3,7 +3,7 @@ import useGame from "../hooks/useGame";
 import "../styles/board.css";
 
 function ChessBoard() {
-  const { board, selectSquare, turn, undoMove } = useGame();
+  const { board, selectSquare, turn, undoMove, validMoves } = useGame();
 
   return (
     <div className="chess-board">
@@ -21,6 +21,7 @@ function ChessBoard() {
             x={x}
             y={y}
             piece={square}
+            validMoves={validMoves}
             onClick={selectSquare}
           />
         ))

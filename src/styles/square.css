@@ -1,0 +1,15 @@
+.valid-move {
+  position: relative;
+}
+
+.valid-move::after {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: rgba(0, 200, 0, 0.6);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

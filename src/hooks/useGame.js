@@ -8,7 +8,7 @@ export default function useGame() {
   const [socket, setSocket] = useState(null);
   const [selected, setSelected] = useState(null);
   const [turn, setTurn] = useState(chess.turn());
-
+  const [validMoves, setValidMoves] = useState([]);
 
   useEffect(() => {
     const ws = createSocket((data) => {
@@ -64,7 +64,16 @@ function selectSquare(x, y) {
       );
       return;
     }
+    const square = coordToSquare(x, y);
 
+    const moves = chess.moves({
+      square,
+      verbose: true
+    });
+
+    const targets = moves.map(m => m.to);
+
+    setValidMoves(targets);
     setSelected({ x, y });
     return;
   }
@@ -81,6 +90,8 @@ function selectSquare(x, y) {
     });
 
     if (move) {
+      // clear highlights after move
+      setValidMoves([]);
       setBoard(chess.board());
       setTurn(chess.turn());
       socket?.send(JSON.stringify({ from, to }));
@@ -112,5 +123,5 @@ function selectSquare(x, y) {
   setSelected(null);
 }
 
-  return { board, selectSquare, undoMove, turn };
+  return { board, selectSquare, undoMove, turn, validMoves };
 }
