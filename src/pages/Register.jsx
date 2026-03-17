@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-function Signup() {
+function Register() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -96,4 +96,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Register;

@@ -1,10 +1,9 @@
-import Square from "./Square";
+import Square from "../components/Square";
 import useGame from "../hooks/useGame";
 import "../styles/board.css";
 
 function ChessBoard() {
   const { board, selectSquare, turn, undoMove, validMoves } = useGame();
-
   return (
     <div className="chess-board">
        <h2>
