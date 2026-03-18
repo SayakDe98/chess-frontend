@@ -12,28 +12,17 @@
 
   border: 8px solid #4c1d95;
   border-radius: 8px;
-
   background: #4c1d95;
-
   box-shadow: 0 10px 40px rgba(109, 40, 217, 0.35);
 }
 
-.turn {
-  padding-top: 10px;
-}
-
-/* ChessBoard.css */
-.chess-board { overflow-x: auto; }
-
-@media (max-width: 600px) {
+@media screen and (max-width: 768px) {
   .board {
-    grid-template-columns: repeat(8, min(9vw, 70px));
-    grid-template-rows:    repeat(8, min(9vw, 70px));
+    grid-template-columns: repeat(8, 12.5svw);
+    grid-template-rows: repeat(8, 12.5svw);
+    width: 100svw;
+    border-width: 4px;
+    border-radius: 4px;
+    margin: auto;
   }
-}
-
-/* Square.css */
-@media (max-width: 600px) {
-  .square   { width: min(9vw, 70px); height: min(9vw, 70px); font-size: 20px; }
-  .piece-svg { width: min(5.5vw, 40px); height: min(5.5vw, 40px); }
 }
