@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { PawnSVG, RookSVG, KnightSVG,QueenSVG  } from "../utils/PieceIcons";
+import { PawnSVG, RookSVG, KnightSVG, QueenSVG } from "../utils/PieceIcons";
 
 /* ─── Floating wrapper ───────────────────────────────────────────────── */
 const Float = ({ children, style, delay = "0s", dur = "7s" }) => (
-  <div style={{
-    position: "absolute",
-    animation: `chessfloat ${dur} ease-in-out infinite`,
-    animationDelay: delay,
-    filter: "drop-shadow(0 18px 36px rgba(109,40,217,0.28))",
-    ...style,
-  }}>
+  <div
+    className="cm-float-piece"
+    style={{
+      position: "absolute",
+      animation: `chessfloat ${dur} ease-in-out infinite`,
+      animationDelay: delay,
+      filter: "drop-shadow(0 18px 36px rgba(109,40,217,0.28))",
+      ...style,
+    }}
+  >
     {children}
   </div>
 );
@@ -84,14 +87,14 @@ export default function Login() {
       }
 
       .cm-page{
-        min-height:100vh;
+        min-height:100svh;
         display:flex;
+        padding-top:64px;
         font-family:'Outfit',sans-serif;
         background:#ede9fe;
         position:relative;
         overflow:hidden;
       }
-
       .cm-bg{
         position:fixed;inset:0;
         background:
@@ -102,50 +105,14 @@ export default function Login() {
         z-index:0;
       }
 
-      /* NAV */
-      .cm-nav{
-        position:fixed;top:0;left:0;right:0;
-        padding:20px 48px;
-        display:flex;justify-content:space-between;align-items:center;
-        z-index:20;
-        animation:fadein .6s ease both;
-      }
-      .cm-brand{display:flex;align-items:center;gap:10px;}
-      .cm-brand-icon{
-        width:36px;height:36px;
-        background:linear-gradient(135deg,#7c3aed,#a78bfa);
-        border-radius:10px;
-        display:flex;align-items:center;justify-content:center;
-        font-size:17px;
-        box-shadow:0 4px 12px rgba(124,58,237,.38);
-      }
-      .cm-brand-name{
-        font-weight:700;font-size:16px;letter-spacing:.06em;color:#3b1d8a;
-      }
-      .cm-brand-name span{color:#7c3aed;}
-      .cm-navlinks{display:flex;gap:26px;list-style:none;align-items:center;}
-      .cm-navlinks li{
-        font-size:13px;font-weight:400;color:#4c1d95;opacity:.7;cursor:pointer;
-        transition:opacity .2s;
-      }
-      .cm-navlinks li:hover{opacity:1;}
-      .cm-navlinks li.reg{
-        background:#7c3aed;color:#fff !important;opacity:1 !important;
-        padding:8px 20px;border-radius:8px;font-weight:500;
-        box-shadow:0 4px 14px rgba(124,58,237,.36);
-        transition:background .2s,transform .2s !important;
-      }
-      .cm-navlinks li.reg:hover{background:#6d28d9 !important;transform:translateY(-1px);}
-
       /* LEFT */
       .cm-left{
         flex:1;
         display:flex;flex-direction:column;justify-content:center;
-        padding:80px 64px 60px;
+        padding:40px 64px 60px;
         position:relative;z-index:2;
         animation:slideup .9s cubic-bezier(.16,1,.3,1) .1s both;
       }
-      @media(max-width:900px){.cm-left{display:none;}.cm-right{flex:1;}}
       .cm-headline{
         font-family:'Playfair Display',serif;
         font-weight:800;
@@ -234,7 +201,6 @@ export default function Login() {
         font-size:13px;color:#7c3aed;opacity:.62;
         margin-bottom:30px;font-weight:300;
       }
-
       .cm-field{margin-bottom:18px;}
       .cm-field label{
         display:block;font-size:11px;font-weight:500;
@@ -263,7 +229,6 @@ export default function Login() {
         transition:opacity .2s;
       }
       .cm-forgot span:hover{opacity:1;}
-
       .cm-submit{
         margin-top:22px;width:100%;padding:14px;
         background:linear-gradient(135deg,#7c3aed 0%,#9d5ff5 100%);
@@ -284,7 +249,6 @@ export default function Login() {
       .cm-submit:active{transform:translateY(0);}
       .cm-submit span{position:relative;z-index:1;}
       .cm-submit.loading{opacity:.75;pointer-events:none;}
-
       .cm-divider{
         display:flex;align-items:center;gap:12px;margin:22px 0;
       }
@@ -305,6 +269,40 @@ export default function Login() {
         transition:text-decoration-color .2s;
       }
       .cm-register button:hover{text-decoration-color:#7c3aed;}
+
+      /* ── Responsive ─────────────────────────────────────────────────── */
+      @media screen and (max-width:900px){
+        .cm-left{display:none;}
+        .cm-right{width:100svw;flex:1;}
+      }
+
+      @media screen and (max-width:768px){
+        .cm-page{
+          flex-direction:column;
+          align-items:center;
+          justify-content:center;
+          padding-top:64px;
+        }
+        .cm-right{
+          width:100svw;
+          padding:16px;
+          align-items:flex-start;
+        }
+        .cm-card{
+          max-width:100%;
+          padding:32px 20px;
+          border-radius:18px;
+        }
+        .cm-card-title{font-size:1.7rem;}
+        .cm-scroll{display:none;}
+        .cm-float-piece{display:none;}
+      }
+
+      @media screen and (max-width:480px){
+        .cm-card{padding:28px 16px;}
+        .cm-card-title{font-size:1.5rem;}
+        .cm-input{font-size:16px;}
+      }
     `;
     document.head.appendChild(el);
     return () => document.head.removeChild(el);
