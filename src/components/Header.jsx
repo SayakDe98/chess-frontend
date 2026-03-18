@@ -1,30 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
-
-function parseJwt(token) {
-  try {
-    return JSON.parse(atob(token.split(".")[1]));
-  } catch {
-    return null;
-  }
-}
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const payload = parseJwt(token);
-      if (payload?.username) setUsername(payload.username);
-      else if (payload?.name) setUsername(payload.name);
-    }
-  }, []);
+  const { username, logout } = useAuth();
 
   function handleLogout() {
-    localStorage.removeItem("token");
+    logout();
     toast.success("Logged out successfully");
     navigate("/login");
   }
@@ -84,7 +67,6 @@ export default function Header() {
           gap: 10px;
         }
 
-        /* User pill */
         .sh-user-pill {
           display: flex;
           align-items: center;
@@ -96,6 +78,10 @@ export default function Header() {
           font-size: 13px;
           font-weight: 500;
           color: #4c1d95;
+          max-width: 180px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .sh-avatar {
@@ -109,7 +95,6 @@ export default function Header() {
           flex-shrink: 0;
         }
 
-        /* Ghost pill for guest */
         .sh-guest-pill {
           display: flex;
           align-items: center;
@@ -125,7 +110,6 @@ export default function Header() {
           letter-spacing: 0.04em;
         }
 
-        /* Buttons */
         .sh-btn {
           padding: 8px 18px;
           border-radius: 8px;
@@ -173,7 +157,6 @@ export default function Header() {
           border-color: #dc2626;
         }
 
-        /* Divider between user pill and logout */
         .sh-divider {
           width: 1px;
           height: 22px;
@@ -181,29 +164,20 @@ export default function Header() {
           margin: 0 4px;
         }
 
-        @media (max-width: 600px) {
-          .sh-nav { padding: 12px 20px; }
-          .sh-brand-name { display: none; }
-          .sh-btn { padding: 7px 13px; font-size: 12px; }
-        }
-        
         @media (max-width: 768px) {
-            .sh-nav         { padding: 12px 16px; }
-            .sh-navlinks    { display: none; }        /* hide nav links */
-            .sh-brand-name  { font-size: 13px; }
-            .sh-user-pill   { max-width: 110px; white-space: nowrap;
-                                overflow: hidden; text-overflow: ellipsis; }
+          .sh-nav { padding: 12px 16px; }
+          .sh-brand-name { font-size: 13px; }
+          .sh-btn { padding: 7px 13px; font-size: 12px; }
+          .sh-user-pill { max-width: 110px; }
         }
       `}</style>
 
       <nav className="sh-nav">
-        {/* Brand */}
         <div className="sh-brand" onClick={() => navigate("/")}>
           <div className="sh-brand-icon">♟</div>
           <span className="sh-brand-name">CHESS<span>MASTERS</span></span>
         </div>
 
-        {/* Right side */}
         <div className="sh-right">
           {isGuest ? (
             <>

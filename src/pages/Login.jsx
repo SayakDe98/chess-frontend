@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { PawnSVG, RookSVG, KnightSVG, QueenSVG } from "../utils/PieceIcons";
 
 /* ─── Floating wrapper ───────────────────────────────────────────────── */
@@ -57,6 +58,7 @@ function Board() {
 /* ─── Main Login ─────────────────────────────────────────────────────── */
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
@@ -323,7 +325,7 @@ export default function Login() {
       });
       const data = await res.json();
       if (!res.ok) { toast.error(data.error || "Login failed"); return; }
-      localStorage.setItem("token", data.token);
+      login(data.token);
       toast.success("Login successful");
       navigate("/");
     } catch {
@@ -404,7 +406,6 @@ export default function Login() {
                 placeholder="••••••••••"
                 value={form.password} onChange={handleChange} required
               />
-              <div className="cm-forgot"><span>Forgot password?</span></div>
             </div>
 
             <button type="submit" className={`cm-submit${loading ? " loading" : ""}`}>

@@ -3,6 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import { AuthProvider } from "./context/AuthContext";
 import ChessBoard from "./pages/ChessBoard";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -24,23 +25,25 @@ const toastStyle = {
 
 function App() {
   return (
-    <BrowserRouter>
-    <Header />
-      <Routes>
-        <Route path="/" element={<ChessBoard />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+    <AuthProvider>
+      <BrowserRouter>
+      <Header />
+        <Routes>
+          <Route path="/" element={<ChessBoard />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
 
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        theme="light"
-        toastStyle={toastStyle}
-        style={{ top: "24px" }}
-      />
-    </BrowserRouter>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          theme="light"
+          toastStyle={toastStyle}
+          style={{ top: "24px" }}
+        />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

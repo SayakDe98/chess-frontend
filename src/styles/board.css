@@ -15,6 +15,9 @@
   background: #4c1d95;
   box-shadow: 0 10px 40px rgba(109, 40, 217, 0.35);
 }
+.turn {
+  padding-top: 32px;
+}
 
 @media screen and (max-width: 768px) {
   .board {
@@ -24,5 +27,8 @@
     border-width: 4px;
     border-radius: 4px;
     margin: auto;
+  }
+  .turn {
+    padding-top: 65px;
   }
 }
