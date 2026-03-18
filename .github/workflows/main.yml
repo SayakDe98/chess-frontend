@@ -22,7 +22,7 @@ jobs:
 
       - name: Build frontend
         env:
-          VITE_WS_URL: ${{ secrets.VITE_WS_URL }}
+          VITE_API_DOMAIN: ${{ secrets.VITE_API_DOMAIN }}
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: npm run build
 
