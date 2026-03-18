@@ -6,7 +6,7 @@ function ChessBoard() {
   const { board, selectSquare, turn, undoMove, validMoves } = useGame();
   return (
     <div className="chess-board">
-       <h2>
+       <h2 className="turn">
         Turn: {turn === "w" ? "White" : "Black"}
       </h2>
       <button onClick={undoMove}>

@@ -1,4 +1,4 @@
-import { pieceIcons } from "../utils/pieceIcons";
+import { pieceIcons } from "../utils/PieceIcons";
 import "../styles/square.css";
 
 function Square({ x, y, piece, validMoves, onClick }) {
@@ -17,17 +17,19 @@ function Square({ x, y, piece, validMoves, onClick }) {
 
   const isValidMove = validMoves?.includes(square);
 
-  return (
-    <div
-      className={`square 
-        ${isDark ? "dark" : "light"} 
-        ${isValidMove ? "valid-move" : ""}
-      `}
-      onClick={() => onClick(x, y)}
-    >
-      {pieceKey ? pieceIcons[pieceKey] : ""}
-    </div>
-  );
+const PieceComponent = pieceKey ? pieceIcons[pieceKey] : null;
+
+return (
+  <div
+    className={`square 
+      ${isDark ? "dark" : "light"} 
+      ${isValidMove ? "valid-move" : ""}
+    `}
+    onClick={() => onClick(x, y)}
+  >
+    {PieceComponent && <PieceComponent />}
+  </div>
+);
 }
 
 export default Square;

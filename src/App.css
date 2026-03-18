@@ -1,3 +1,20 @@
+/* â”€â”€ React Toastify overrides â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+/* Progress bar */
+.Toastify__progress-bar--success { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+.Toastify__progress-bar--error   { background: linear-gradient(90deg, #dc2626, #f87171); }
+.Toastify__progress-bar--warning { background: linear-gradient(90deg, #d97706, #fbbf24); }
+.Toastify__progress-bar--info    { background: linear-gradient(90deg, #7c3aed, #c4b5fd); }
+
+/* Icons */
+.Toastify__toast-icon svg { fill: #7c3aed; }
+.Toastify__toast--error .Toastify__toast-icon svg   { fill: #dc2626; }
+.Toastify__toast--warning .Toastify__toast-icon svg { fill: #d97706; }
+
+/* Close button */
+.Toastify__close-button { color: #7c3aed; opacity: 0.6; }
+.Toastify__close-button:hover { opacity: 1; }
+
 @media screen and (min-width: 768px) {
   #root {
   max-width: 1280px;

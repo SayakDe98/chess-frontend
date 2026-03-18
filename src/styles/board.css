@@ -1,51 +1,39 @@
-.board {
-  display: grid;
-  grid-template-columns: repeat(8, 80px);
-  width: 640px;
-  margin: auto;
-  margin-top: 8px;
-}
-
-.square {
-  width: 80px;
-  height: 80px;
-  font-size: 42px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.light {
-  background: #f0d9b5;
-}
-
-.dark {
-  background: #b58863;
-}
 .chess-board {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  gap: 16px;
 }
 
-@media screen and (max-width: 768px) {
-  .board {
+.board {
   display: grid;
-  grid-template-columns: repeat(8, 12.5svw);
-  width: 100svw;
-  margin: auto;
-  margin-top: 8px;
+  grid-template-columns: repeat(8, 70px);
+  grid-template-rows: repeat(8, 70px);
+
+  border: 8px solid #4c1d95;
+  border-radius: 8px;
+
+  background: #4c1d95;
+
+  box-shadow: 0 10px 40px rgba(109, 40, 217, 0.35);
 }
 
-.square {
-  width: 12.5svw;
-  height: 12.5svw;
-  font-size: 42px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+.turn {
+  padding-top: 10px;
 }
+
+/* ChessBoard.css */
+.chess-board { overflow-x: auto; }
+
+@media (max-width: 600px) {
+  .board {
+    grid-template-columns: repeat(8, min(9vw, 70px));
+    grid-template-rows:    repeat(8, min(9vw, 70px));
+  }
+}
+
+/* Square.css */
+@media (max-width: 600px) {
+  .square   { width: min(9vw, 70px); height: min(9vw, 70px); font-size: 20px; }
+  .piece-svg { width: min(5.5vw, 40px); height: min(5.5vw, 40px); }
 }
