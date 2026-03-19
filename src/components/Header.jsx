@@ -175,7 +175,7 @@ export default function Header() {
       <nav className="sh-nav">
         <div className="sh-brand" onClick={() => navigate("/")}>
           <div className="sh-brand-icon">♟</div>
-          <span className="sh-brand-name">CHESS<span>MASTERS</span></span>
+          <span className="sh-brand-name">GAMBIT</span>
         </div>
 
         <div className="sh-right">

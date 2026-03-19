@@ -8,6 +8,7 @@ import ChessBoard from "./pages/ChessBoard";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Header from "./components/Header";
+import AuthCallback from "./pages/AuthCallback";
 import "./App.css";
 
 const toastStyle = {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/" element={<ChessBoard />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
         </Routes>
 
         <ToastContainer
