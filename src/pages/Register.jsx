@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { PawnSVG, BishopSVG, KingSVG, RookSVG, QueenSVG } from "../utils/PieceIcons";
+import { useAuth } from "../context/AuthContext";
 
 const Float = ({ children, style, delay = "0s", dur = "7s" }) => (
   <div className="cm-float-piece" style={{
@@ -71,6 +72,7 @@ function PasswordStrength({ password }) {
 
 export default function Register() {
   const navigate = useNavigate();
+  const { username } = useAuth();
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
@@ -291,6 +293,12 @@ export default function Register() {
   function handleGoogleLogin() {
     window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
   }
+
+  useEffect(() => {
+    if(username) {
+      navigate("/");
+    }
+  },[username]);
 
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
   const isValidUsername = form.username.length >= 3;

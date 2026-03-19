@@ -43,7 +43,7 @@ function Board() {
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, username } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
@@ -256,7 +256,11 @@ export default function Login() {
   function handleGoogleLogin() {
     window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
   }
-
+  useEffect(() => {
+    if(username) {
+      navigate("/");
+    }
+  },[username]);
   return (
     <div className="cm-page">
       <div className="cm-bg" />
