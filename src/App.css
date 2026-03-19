@@ -1,5 +1,3 @@
-/* â”€â”€ React Toastify overrides â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-
 /* Progress bar */
 .Toastify__progress-bar--success { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
 .Toastify__progress-bar--error   { background: linear-gradient(90deg, #dc2626, #f87171); }
