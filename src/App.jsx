@@ -31,8 +31,8 @@ function App() {
       <Header />
         <Routes>
           <Route path="/" element={<ChessBoard />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          {/* <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} /> */}
           <Route path="/auth/callback" element={<AuthCallback />} />
         </Routes>
 
