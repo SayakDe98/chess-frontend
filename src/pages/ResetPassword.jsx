@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { PawnSVG, RookSVG, KnightSVG, QueenSVG } from "../utils/PieceIcons";
+import { PawnSVG, BishopSVG, KingSVG } from "../utils/PieceIcons";
 
 const Float = ({ children, style, delay = "0s", dur = "7s" }) => (
   <div className="cm-float-piece" style={{
@@ -41,10 +40,11 @@ function Board() {
   );
 }
 
-export default function Login() {
+export default function ResetPassword() {
   const navigate = useNavigate();
-  const { login, username } = useAuth();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [token] = useState(() => new URLSearchParams(window.location.search).get("token"));
+  const [status, setStatus] = useState(() => (token ? "form" : "no-token"));
+  const [form, setForm] = useState({ password: "", confirm: "" });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -146,10 +146,6 @@ export default function Login() {
       .cm-input::placeholder{color:rgba(109,40,217,.28);}
       .cm-input:focus{border-color:#7c3aed;background:rgba(255,255,255,.9);box-shadow:0 0 0 4px rgba(124,58,237,.11);}
 
-      .cm-forgot{text-align:right;margin-top:5px;}
-      .cm-forgot span{font-size:11px;color:#7c3aed;cursor:pointer;opacity:.65;transition:opacity .2s;}
-      .cm-forgot span:hover{opacity:1;}
-
       .cm-submit{
         margin-top:16px;width:100%;padding:12px;
         background:linear-gradient(135deg,#7c3aed 0%,#9d5ff5 100%);
@@ -167,33 +163,25 @@ export default function Login() {
       .cm-submit span{position:relative;z-index:1;}
       .cm-submit.loading{opacity:.75;pointer-events:none;}
 
-      .cm-divider{display:flex;align-items:center;gap:12px;margin:14px 0;}
-      .cm-divider::before,.cm-divider::after{content:'';flex:1;height:1px;background:rgba(167,139,250,.28);}
-      .cm-divider span{font-size:11px;color:#7c3aed;opacity:.45;letter-spacing:.1em;text-transform:uppercase;}
-
-      .cm-google-btn{
-        width:100%;padding:11px 16px;
-        background:#fff;
-        border:1.5px solid rgba(167,139,250,.35);
-        border-radius:10px;
-        font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;
-        color:#2e1065;cursor:pointer;
-        display:flex;align-items:center;justify-content:center;gap:10px;
-        transition:border-color .2s,box-shadow .2s,transform .15s;
-      }
-      .cm-google-btn:hover{border-color:#7c3aed;box-shadow:0 4px 16px rgba(124,58,237,.12);transform:translateY(-1px);}
-      .cm-google-btn:active{transform:translateY(0);}
-      .cm-google-icon{width:18px;height:18px;flex-shrink:0;}
-
-      .cm-register{text-align:center;font-size:13px;color:#5b21b6;opacity:.7;margin-top:14px;}
-      .cm-register button{
+      .cm-back{text-align:center;font-size:13px;color:#5b21b6;opacity:.7;margin-top:14px;}
+      .cm-back button{
         background:none;border:none;
         font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;
         color:#7c3aed;cursor:pointer;padding:0;
         text-decoration:underline;text-underline-offset:2px;
         text-decoration-color:rgba(124,58,237,.35);transition:text-decoration-color .2s;
       }
-      .cm-register button:hover{text-decoration-color:#7c3aed;}
+      .cm-back button:hover{text-decoration-color:#7c3aed;}
+
+      .cm-status-icon{
+        width:52px;height:52px;border-radius:50%;
+        display:flex;align-items:center;justify-content:center;
+        margin-bottom:16px;
+        animation:slideup .5s cubic-bezier(.16,1,.3,1) both;
+      }
+      .cm-status-icon.success{background:rgba(34,197,94,.14);color:#16a34a;}
+      .cm-status-icon.error{background:rgba(239,68,68,.12);color:#dc2626;}
+      .cm-status-icon svg{width:26px;height:26px;}
 
       /* ── Responsive ───────────────────────────────────────────────── */
       @media screen and (max-width:900px){
@@ -213,7 +201,6 @@ export default function Login() {
         .cm-input{font-size:16px;padding:10px 12px;}
         .cm-field{margin-bottom:10px;}
         .cm-submit{padding:11px;}
-        .cm-divider{margin:10px 0;}
       }
     `;
     document.head.appendChild(el);
@@ -224,18 +211,35 @@ export default function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    if (form.password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    if (form.password !== form.confirm) {
+      toast.error("Passwords don't match");
+      return;
+    }
+
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/signin", {
+      const res = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ token, new_password: form.password }),
       });
       const data = await res.json();
-      if (!res.ok) { toast.error(data.error || "Login failed"); return; }
-      login(data.token);
-      toast.success("Login successful");
-      navigate("/");
+
+      if (!res.ok) {
+        if (data.error === "invalid or expired token") {
+          setStatus("invalid");
+        } else {
+          toast.error(data.error || "Failed to reset password");
+        }
+        return;
+      }
+
+      setStatus("success");
     } catch {
       toast.error("Server error");
     } finally {
@@ -243,74 +247,86 @@ export default function Login() {
     }
   }
 
-  function handleGoogleLogin() {
-    window.location.href = "/api/auth/google/login";
-  }
-  useEffect(() => {
-    if(username) {
-      navigate("/");
-    }
-  },[username]);
   return (
     <div className="cm-page">
       <div className="cm-bg" />
       <Board />
 
       <Float style={{ top: "9%", left: "37%", zIndex: 3 }} delay="0s" dur="7s"><PawnSVG size={68} color="#9d5ff5" /></Float>
-      <Float style={{ top: "14%", right: "450px", zIndex: 3 }} delay="1.2s" dur="5.5s"><PawnSVG size={52} color="#7c3aed" /></Float>
       <Float style={{ bottom: "12%", left: "40%", zIndex: 3 }} delay="2s" dur="8s"><PawnSVG size={62} color="#a78bfa" /></Float>
-      <Float style={{ top: "22%", right: "20px", zIndex: 3 }} delay="0.6s" dur="6.5s"><RookSVG size={84} color="#c4b5fd" /></Float>
-      <Float style={{ bottom: "8%", right: "50px", zIndex: 3 }} delay="1.6s" dur="7.5s"><KnightSVG size={96} color="#7c3aed" /></Float>
-      <Float style={{ top: "4%", right: "210px", zIndex: 2 }} delay="0.9s" dur="9s"><QueenSVG size={106} color="#ddd6fe" /></Float>
+      <Float style={{ bottom: "8%", right: "50px", zIndex: 3 }} delay="1.6s" dur="7.5s"><BishopSVG size={90} color="#7c3aed" /></Float>
+      <Float style={{ top: "4%", right: "210px", zIndex: 2 }} delay="0.9s" dur="9s"><KingSVG size={100} color="#ddd6fe" /></Float>
 
       <div className="cm-left">
         <h1 className="cm-headline">
-          Chess is<br /><em>essentially</em><br />a philosopher's<br />game
+          Every game<br />deserves a<br /><em>fresh start.</em>
         </h1>
         <p className="cm-sub">
-          Our online chess platform offers a unique 3D playing experience.
-          Play at your own pace and sharpen your skills.
+          Choose a new password to get back to the board.
         </p>
       </div>
 
       <div className="cm-right">
         <div className="cm-card">
-          <h2 className="cm-card-title">Welcome back</h2>
-          <p className="cm-card-sub">Sign in to continue your game</p>
+          {status === "no-token" && (
+            <>
+              <div className="cm-status-icon error">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.29 3.86l-8.18 14.18A2 2 0 0 0 3.82 21h16.36a2 2 0 0 0 1.71-3.03L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </div>
+              <h2 className="cm-card-title">Invalid reset link</h2>
+              <p className="cm-card-sub">This link is missing its reset token. Copy the full link from the email exactly as it was sent.</p>
+              <p className="cm-back"><button type="button" onClick={() => navigate("/login")}>Back to sign in</button></p>
+            </>
+          )}
 
-          <form onSubmit={handleSubmit}>
-            <div className="cm-field">
-              <label htmlFor="email">Email address</label>
-              <input id="email" className="cm-input" type="email" name="email"
-                placeholder="you@example.com" value={form.email} onChange={handleChange} required />
-            </div>
-            <div className="cm-field">
-              <label htmlFor="password">Password</label>
-              <input id="password" className="cm-input" type="password" name="password"
-                placeholder="••••••••••" value={form.password} onChange={handleChange} required />
-              <div className="cm-forgot"><span onClick={() => navigate("/forgot-password")}>Forgot password?</span></div>
-            </div>
-            <button type="submit" className={`cm-submit${loading ? " loading" : ""}`}>
-              <span>{loading ? "Signing in…" : "Play for Free →"}</span>
-            </button>
-          </form>
+          {status === "invalid" && (
+            <>
+              <div className="cm-status-icon error">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.29 3.86l-8.18 14.18A2 2 0 0 0 3.82 21h16.36a2 2 0 0 0 1.71-3.03L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </div>
+              <h2 className="cm-card-title">Link expired</h2>
+              <p className="cm-card-sub">This reset link is invalid, expired, or has already been used. Reset links are only valid for 30 minutes.</p>
+              <p className="cm-back"><button type="button" onClick={() => navigate("/login")}>Back to sign in</button></p>
+            </>
+          )}
 
-          <div className="cm-divider"><span>or</span></div>
+          {status === "success" && (
+            <>
+              <div className="cm-status-icon success">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </div>
+              <h2 className="cm-card-title">Password updated</h2>
+              <p className="cm-card-sub">Your password has been changed successfully.</p>
+              <button type="button" className="cm-submit" onClick={() => navigate("/login")}>
+                <span>Sign in →</span>
+              </button>
+            </>
+          )}
 
-          <button type="button" className="cm-google-btn" onClick={handleGoogleLogin}>
-            <svg className="cm-google-icon" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            Continue with Google
-          </button>
+          {status === "form" && (
+            <>
+              <h2 className="cm-card-title">Set a new password</h2>
+              <p className="cm-card-sub">Choose a strong password for your account</p>
 
-          <p className="cm-register">
-            New here?{" "}
-            <button type="button" onClick={() => navigate("/register")}>Create an account</button>
-          </p>
+              <form onSubmit={handleSubmit}>
+                <div className="cm-field">
+                  <label htmlFor="password">New password</label>
+                  <input id="password" className="cm-input" type="password" name="password"
+                    placeholder="••••••••••" value={form.password} onChange={handleChange} required minLength={6} />
+                </div>
+                <div className="cm-field">
+                  <label htmlFor="confirm">Confirm password</label>
+                  <input id="confirm" className="cm-input" type="password" name="confirm"
+                    placeholder="••••••••••" value={form.confirm} onChange={handleChange} required minLength={6} />
+                </div>
+                <button type="submit" className={`cm-submit${loading ? " loading" : ""}`}>
+                  <span>{loading ? "Updating…" : "Update password →"}</span>
+                </button>
+              </form>
+
+              <p className="cm-back"><button type="button" onClick={() => navigate("/login")}>Back to sign in</button></p>
+            </>
+          )}
         </div>
       </div>
     </div>

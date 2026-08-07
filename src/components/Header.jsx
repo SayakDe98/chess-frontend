@@ -178,7 +178,7 @@ export default function Header() {
           <span className="sh-brand-name">GAMBIT</span>
         </div>
 
-        {/* <div className="sh-right">
+        <div className="sh-right">
           {isGuest ? (
             <>
               <div className="sh-guest-pill">👤 Guest</div>
@@ -203,7 +203,7 @@ export default function Header() {
               </button>
             </>
           )}
-        </div> */}
+        </div>
       </nav>
     </>
   );

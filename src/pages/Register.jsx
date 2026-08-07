@@ -82,12 +82,12 @@ export default function Register() {
       @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Outfit:wght@300;400;500;600&display=swap');
       *{margin:0;padding:0;box-sizing:border-box;}
       body{overflow-x:hidden;}
+      #root{padding-top:0;padding-bottom:0;max-width:none}
 
       @keyframes chessfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
       @keyframes fadein{from{opacity:0}to{opacity:1}}
       @keyframes slideup{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
       @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
-      @keyframes moused{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
       @keyframes checkpop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
 
       .cm-page{
@@ -230,17 +230,8 @@ export default function Register() {
         display:flex;align-items:center;justify-content:center;
         font-size:16px;border:1px solid rgba(124,58,237,.15);
       }
-      .cm-perk-title{font-weight:600;font-size:13px;color:#2e1065;margin-bottom:1px;}
-      .cm-perk-desc{font-size:12px;font-weight:300;color:#6d28d9;opacity:.7;line-height:1.45;}
-
-      .cm-scroll{
-        position:fixed;bottom:24px;right:64px;
-        display:flex;align-items:center;gap:10px;
-        color:#5b21b6;opacity:.45;font-size:12px;letter-spacing:.07em;
-        z-index:6;animation:fadein 1.5s .8s ease both;
-      }
-      .cm-mouse{width:22px;height:34px;border:1.5px solid currentColor;border-radius:12px;display:flex;justify-content:center;padding-top:7px;}
-      .cm-mdot{width:3px;height:6px;background:currentColor;border-radius:2px;animation:moused 1.5s ease-in-out infinite;}
+      .cm-perk-title{font-weight:600;font-size:13px;color:#2e1065;margin-bottom:1px;text-align:start;}
+      .cm-perk-desc{font-size:12px;font-weight:300;color:#6d28d9;opacity:.7;line-height:1.45;text-align:start;}
 
       /* ── Responsive ───────────────────────────────────────────────── */
       @media screen and (max-width:900px){
@@ -252,7 +243,6 @@ export default function Register() {
         .cm-left-form{width:100svw;padding:16px;align-items:center;}
         .cm-card{max-width:100%;padding:22px 16px;border-radius:16px;}
         .cm-card-title{font-size:1.5rem;}
-        .cm-scroll{display:none;}
         .cm-float-piece{display:none;}
       }
       @media screen and (max-width:480px){
@@ -274,7 +264,7 @@ export default function Register() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/register`, {
+      const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -291,7 +281,7 @@ export default function Register() {
   }
 
   function handleGoogleLogin() {
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+    window.location.href = "/api/auth/google/login";
   }
 
   useEffect(() => {
@@ -385,13 +375,13 @@ export default function Register() {
 
       <div className="cm-right">
         <h1 className="cm-headline">Make your<br /><em>first move.</em></h1>
-        <p className="cm-sub">Join millions of players worldwide. Your journey to chess mastery starts with a single account.</p>
+        <p className="cm-sub">Your journey to chess mastery starts with a single account.</p>
         <div className="cm-perks">
           {[
             { icon: "♟", title: "Play instantly", desc: "Jump into a game quickly with or without signing up." },
-            { icon: "🏆", title: "Ranked matches", desc: "Compete in rated games and climb the global leaderboard." },
-            { icon: "🎓", title: "Learn & improve", desc: "Access puzzles, tutorials, and analysis tools." },
-            { icon: "🌍", title: "Global community", desc: "Challenge players from 180+ countries, any time." },
+            { icon: "⚡", title: "Real-time play", desc: "Moves sync instantly between players, no page reloads." },
+            { icon: "✅", title: "Smart move validation", desc: "Automatic legal-move, check, and checkmate detection." },
+            { icon: "🌍", title: "Play anytime", desc: "No lobby to wait on — jump in and play whenever suits you." },
           ].map(({ icon, title, desc }) => (
             <div className="cm-perk" key={title}>
               <div className="cm-perk-icon">{icon}</div>
@@ -402,11 +392,6 @@ export default function Register() {
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="cm-scroll">
-        <div className="cm-mouse"><div className="cm-mdot" /></div>
-        <span>Scroll down</span>
       </div>
     </div>
   );
